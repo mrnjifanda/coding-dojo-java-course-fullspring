@@ -10,5 +10,8 @@
 	</head>
 	<body>
 		<h1>Hello !!! ${ auth.userName } </h1>
+		<form action="/logout" method="post">
+			<input type="submit" value="Logout"/>
+		</form>
 	</body>
 </html>

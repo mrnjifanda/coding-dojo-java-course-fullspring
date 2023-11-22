@@ -43,8 +43,24 @@ public class UserService {
     }
 
     public User login(LoginDto login, BindingResult result) {
-        // TO-DO: Additional validations!
-        return null;
-    }
 
+    	Optional<User> verifyEmail = this.userRepository.findByEmail(login.getEmail());
+    	if (!verifyEmail.isPresent()) {
+
+    		result.rejectValue("email", "Not found", "The Email not exist in the system!");
+    	} else {
+
+    		User user = verifyEmail.get(); // Convert Optional<User> to User
+    		String password = login.getPassword(); // Password send by user in the form
+    		String userHashedPassword = user.getPassword(); // Password content in the database
+    		if (BCrypt.checkpw(password, userHashedPassword)) { // Verify if password equal to hashed password
+
+    			return user;
+    		} else {
+    			result.rejectValue("password", "Matches", "The Password is not match!");
+    		}
+    	}
+    	
+    	return null;
+    }
 }

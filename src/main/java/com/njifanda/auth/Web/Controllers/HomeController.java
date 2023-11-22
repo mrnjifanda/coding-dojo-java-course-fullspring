@@ -44,7 +44,17 @@ public class HomeController {
     }
     
     @GetMapping("/")
-    public String index(Model model) {
+    public String index(
+    		Model model,
+    		HttpSession session
+    ) {
+    	
+    	// Check if user already login, if session have user, redirect to home page
+        User user = (User) session.getAttribute(this.authSession);
+        if (user != null) {
+
+        	return "redirect:/home";
+        }
     
         // Bind empty User and LoginUser objects to the JSP
         // to capture the form input
@@ -76,22 +86,38 @@ public class HomeController {
     }
     
     @PostMapping("/login")
-    public String login(@Valid @ModelAttribute("newLogin") LoginDto newLogin, 
-            BindingResult result, Model model, HttpSession session) {
+    public String login(
+    		@Valid @ModelAttribute("login") LoginDto login, 
+            BindingResult result,
+            Model model,
+            HttpSession session
+    ) {
         
         // Add once service is implemented:
-        // User user = userServ.login(newLogin, result);
+         User user = this.userService.login(login, result);
     
-        if(result.hasErrors()) {
-            model.addAttribute("newUser", new User());
+        if(result.hasErrors() || user == null) {
+
+            model.addAttribute("user", new User());
             return "index.jsp";
         }
-    
+
         // No errors! 
         // TO-DO Later: Store their ID from the DB in session, 
-        // in other words, log them in.
-    
+        // in other words, log them in.    
+        session.setAttribute(this.authSession, user);
         return "redirect:/home";
+    }
+
+    @PostMapping("/logout")
+    public String logout(HttpSession session) {
+
+    	Object user = session.getAttribute(this.authSession);
+    	if (user != null) {
+    		session.setAttribute(authSession, null); // Delete user in session
+    		// session.removeAttribute(authSession); // Another method
+    	}
+    	return "redirect:/";
     }
 
 }

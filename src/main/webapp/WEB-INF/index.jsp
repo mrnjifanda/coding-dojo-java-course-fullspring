@@ -15,7 +15,7 @@
 			<p>Join our grawing community</p>
 		
 			<div class="row">
-				<div class="col-6">
+				<div class="col-6 card p-3">
 					<h2>Register</h2>
 					<form:form action="/register" method="post" modelAttribute="user">
 						<div class="row mb-2">
@@ -52,15 +52,15 @@
 					</form:form>
 				</div>
 				
-				<div class="col-6">
+				<div class="col-6 card p-3 ml-5">
 					<h2>Log in</h2>
-					<form:form action="" method="post" modelAttribute="login">
+					<form:form action="/login" method="post" modelAttribute="login">
 						<div>
 							<form:label path="email">Email :</form:label>
 			                <form:errors path="email"/>
 			                <form:input type="email" path="email"/>
 						</div>
-						
+
 						<div>
 							<form:label path="password">Password :</form:label>
 			                <form:errors path="password"/>
